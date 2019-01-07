@@ -1,0 +1,60 @@
+CREATE TABLE som.company (
+	company_id	text,
+	company_name	text,
+	address		text,
+	company_status	text,
+	created_by	text,
+	created_date	timestamp,
+	modified_by	text,
+	modified_date	timestamp,
+	status		boolean,
+	PRIMARY KEY (company_id, modified_date, company_status, status )
+)
+
+CREATE TABLE som.users (
+	employee_id		text,
+	company_id		text,
+	customer_id		text,
+	user_id			text,
+	first_name		text,
+	last_name		text,
+	user_status		text,
+	password		text,
+	email_id		text,
+	email_id_1		text,
+	mobile_no		bigint
+	mobile_no_1		bigint
+	last_otp		int
+	token			text,
+	token_expiry_date	timestamp,
+	profile_image_url	text,
+	pwd_change_flag		boolean,
+	pwd_change_date		timestamp,
+	created_by		text,
+	created_date		timestamp,
+	modified_by		text,
+	modified_date		timestamp,
+	status			boolean,
+	PRIMARY KEY (employee_id, modified_date, company_id, user_status, status )
+)
+
+CREATE TABLE som.roles (
+	role_id		text,
+	role_name	text,
+	admin_role	boolean,
+	company_id	text,
+	created_by	text,
+	created_date	timestamp,
+	modified_by	text,
+	modified_date	timestamp,
+	status		boolean,
+	PRIMARY KEY (role_id, modified_date, company_id, status )
+)
+
+CREATE TABLE som.userroles (
+	auto_id		bigint
+	employee_id	text,
+	role_id		text,
+	company_id	text,
+	PRIMARY KEY (auto_id, employee_id )
+)
