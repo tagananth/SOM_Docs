@@ -1,60 +1,164 @@
-CREATE TABLE som.company (
-	company_id	text,
-	company_name	text,
-	address		text,
-	company_status	text,
-	created_by	text,
-	created_date	timestamp,
-	modified_by	text,
-	modified_date	timestamp,
+CREATE TABLE som.customer (
+	customerid	text,
+	customername	text,
+	active		boolean,
+	comments	text,
+	addressline1	text,
+	addressline2	text,
+	addressline3	text,
+	city		text,
+	state		text,
+	country		text,
+	zipcode		text,
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (company_id, modified_date, company_status, status )
+	PRIMARY KEY (customerid, modifieddate, active, status )
 )
 
 CREATE TABLE som.users (
-	employee_id		text,
-	company_id		text,
-	customer_id		text,
-	user_id			text,
-	first_name		text,
-	last_name		text,
-	user_status		text,
+	userid			text,
+	customerid		text,
+	employeeid		text,
+	firstname		text,
+	lastname		text,
+	active			boolean,
 	password		text,
-	email_id		text,
-	email_id_1		text,
-	mobile_no		bigint
-	mobile_no_1		bigint
-	last_otp		int
-	token			text,
-	token_expiry_date	timestamp,
-	profile_image_url	text,
-	pwd_change_flag		boolean,
-	pwd_change_date		timestamp,
-	created_by		text,
-	created_date		timestamp,
-	modified_by		text,
-	modified_date		timestamp,
-	status			boolean,
-	PRIMARY KEY (employee_id, modified_date, company_id, user_status, status )
+	emailid			text,
+	emailid1		text,
+	mobileno		bigint,
+	mobileno1		bigint,
+	otp			int
+	tokenkey		text,
+	tokenkeyexpirydate	timestamp,
+	profileimageurl		text,
+	pwdchangeflag		boolean,
+	pwdchangedate		timestamp,
+	roleid		text,
+	rolename	text,
+	comments	text,
+	addressline1	text,
+	addressline2	text,
+	addressline3	text,
+	city		text,
+	state		text,
+	country		text,
+	zipcode		text,
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
+	status		boolean,
+	PRIMARY KEY (userid, modifieddate, customerid, active, status )
 )
 
 CREATE TABLE som.roles (
-	role_id		text,
-	role_name	text,
-	admin_role	boolean,
-	company_id	text,
-	created_by	text,
-	created_date	timestamp,
-	modified_by	text,
-	modified_date	timestamp,
+	roleid		text,
+	rolename	text,
+	customerid	text,
+	comments	text,
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (role_id, modified_date, company_id, status )
+	PRIMARY KEY (roleid, modifieddate, customerid, status )
 )
 
-CREATE TABLE som.userroles (
-	auto_id		bigint
-	employee_id	text,
-	role_id		text,
-	company_id	text,
-	PRIMARY KEY (auto_id, employee_id )
+CREATE TABLE som.configuration (
+	configurationid	text,
+	configurationname	text,
+	customerid	text,
+	active		boolean,
+	type		text,	//Email/SMS
+	source		text, //Primary/Secondary
+	fromid		text,
+	fromname	text,
+	hostaddress 	text,
+	username	text,
+	password	text,
+	port		text,
+	porttls		text,
+	portsls		text,
+	comments	text,
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
+	status		boolean,
+	PRIMARY KEY (configurationid, modifieddate, customerid, active, status )
+)
+
+CREATE TABLE som.group (
+	groupid		text,
+	groupname	text,
+	customerid	text,
+	active		boolean,
+	comments	text,
+	type		text,	//Email/SMS
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
+	status		boolean,
+	PRIMARY KEY (groupid, modifieddate, customerid, active, status )
+)
+
+
+CREATE TABLE som.groupmember (
+	groupmemberid	bigint,
+	groupid		text,
+	groupname	text,
+	customerid	text,
+	userid		text,
+	username	text,
+	usercontact	text,  //0,1,2...
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
+	status		boolean,
+	PRIMARY KEY (groupmemberid, modifieddate, customerid, active, status )
+)
+
+
+CREATE TABLE som.messages (
+	messageid	text,
+	instanceid	text,
+	customerid	text,
+	userid		text,
+	username	text,
+	groupid		text,
+	groupname	text,
+	configurationid	text,
+	configurationname	text,
+	type		text,	//Email/SMS
+	source		text, //Primary/Secondary
+	emailid		text, 
+	mobileno	bigint,
+	templateid	text,
+	message		text,
+	messagestatus	text,	//New/Open/Completed/Error/Acknowledged/NotAcknowledged/Hold
+	createdby	text,
+	createdbyname	text,
+	createddate	timestamp,
+	modifiedby	text,
+	modifiedbyname	text,
+	modifieddate	timestamp,
+	status		boolean,
+	PRIMARY KEY (messageid, modifieddate, customerid, instanceid, username, status )
 )
