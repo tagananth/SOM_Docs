@@ -162,3 +162,10 @@ CREATE TABLE som.messages (
 	status		boolean,
 	PRIMARY KEY (messageid, modifieddate, customerid, instanceid, username, status )
 )
+
+CREATE TABLE som.attachments (
+	attachmentid	bigint,
+	messageid	text,
+	attachmenturl   text
+	PRIMARY KEY (attachmentid, messageid)
+)
