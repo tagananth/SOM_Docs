@@ -82,10 +82,11 @@ CREATE TABLE som.configuration (
 	source		text, //Primary/Secondary
 	fromid		text,
 	fromname	text,
+	accountsid	text, // Only For SMS
 	hostaddress 	text,
 	username	text,
-	password	text,
-	port		text,
+	password	text, 
+	authtoken	text,// Only For SMS
 	porttls		text,
 	portsls		text,
 	comments	text,
@@ -138,6 +139,7 @@ CREATE TABLE som.groupmember (
 
 CREATE TABLE som.messages (
 	messageid	text,
+	sendid		text,
 	instanceid	text,
 	customerid	text,
 	userid		text,
