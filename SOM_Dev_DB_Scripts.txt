@@ -32,7 +32,7 @@ CREATE TABLE som.users (
 	emailid1		text,
 	mobileno		bigint,
 	mobileno1		bigint,
-	otp			int
+	otp			int,
 	tokenkey		text,
 	tokenkeyexpirydate	timestamp,
 	profileimageurl		text,
@@ -55,7 +55,7 @@ CREATE TABLE som.users (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (userid, modifieddate, customerid, active, status )
+	PRIMARY KEY (userid, modifieddate, emailid, mobileno, customerid, active, status)
 )
 
 CREATE TABLE som.roles (
@@ -132,7 +132,7 @@ CREATE TABLE som.groupmember (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (groupmemberid, modifieddate, customerid, active, status )
+	PRIMARY KEY (groupmemberid, modifieddate, customerid, status )
 )
 
 
