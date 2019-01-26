@@ -151,7 +151,7 @@ CREATE TABLE som.messages (
 	type		text,	//Email/SMS
 	source		text, //Primary/Secondary
 	emailid		text, 
-	mobileno	bigint,
+	mobileno	text,
 	templateid	text,
 	message		text,
 	messagestatus	text,	//New/Open/Completed/Error/Acknowledged/NotAcknowledged/Hold
@@ -162,8 +162,10 @@ CREATE TABLE som.messages (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (messageid, modifieddate, customerid, instanceid, username, status )
-)
+	PRIMARY KEY (messageid, modifieddate, type, customerid, instanceid, username, status )
+)WITH CLUSTERING ORDER BY ( modifieddate  DESC);
+
+
 
 CREATE TABLE som.attachments (
 	attachmentid	bigint,
