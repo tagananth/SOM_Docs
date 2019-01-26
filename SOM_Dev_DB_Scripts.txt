@@ -23,6 +23,7 @@ CREATE TABLE som.customer (
 CREATE TABLE som.users (
 	userid			text,
 	customerid		text,
+	username		text,
 	employeeid		text,
 	firstname		text,
 	lastname		text,
