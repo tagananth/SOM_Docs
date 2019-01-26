@@ -162,7 +162,7 @@ CREATE TABLE som.messages (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (messageid, modifieddate, type, customerid, instanceid, username, status )
+	PRIMARY KEY (type, modifieddate, messageid, customerid, instanceid, username, status )
 )WITH CLUSTERING ORDER BY ( modifieddate  DESC);
 
 
