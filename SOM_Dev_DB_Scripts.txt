@@ -172,9 +172,9 @@ CREATE TABLE messages (
 
 
 
-CREATE TABLE som.attachments (
+CREATE TABLE attachments (
 	attachmentid	bigint,
 	messageid	bigint,
-	attachmenturl   text
+	attachmenturl   text,
 	PRIMARY KEY (attachmentid)
 )
