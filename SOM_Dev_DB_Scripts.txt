@@ -142,16 +142,16 @@ CREATE TABLE groupmember (
 );
 
 
-CREATE TABLE som.messages (
-	messageid	text,
+CREATE TABLE messages (
+	messageid	bigint,
 	sendid		text,
 	instanceid	text,
-	customerid	text,
-	userid		text,
+	customerid	bigint,
+	userid		bigint,
 	username	text,
-	groupid		text,
+	groupid		bigint,
 	groupname	text,
-	configurationid	text,
+	configurationid	bigint,
 	configurationname	text,
 	type		text,	//Email/SMS
 	source		text, //Primary/Secondary
@@ -160,21 +160,21 @@ CREATE TABLE som.messages (
 	templateid	text,
 	message		text,
 	messagestatus	text,	//New/Open/Completed/Error/Acknowledged/NotAcknowledged/Hold
-	createdby	text,
+	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
-	modifiedby	text,
+	modifiedby	bigint,
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (type, modifieddate, messageid, customerid, instanceid, username, status )
+	PRIMARY KEY (messageid)
 )WITH CLUSTERING ORDER BY ( modifieddate  DESC);
 
 
 
 CREATE TABLE som.attachments (
 	attachmentid	bigint,
-	messageid	text,
+	messageid	bigint,
 	attachmenturl   text
-	PRIMARY KEY (attachmentid, messageid)
+	PRIMARY KEY (attachmentid)
 )
