@@ -1,5 +1,5 @@
-CREATE TABLE som.customer (
-	customerid	text,
+CREATE TABLE customer (
+	customerid	bigint,
 	customername	text,
 	active		boolean,
 	comments	text,
@@ -10,74 +10,77 @@ CREATE TABLE som.customer (
 	state		text,
 	country		text,
 	zipcode		text,
-	createdby	text,
+	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
-	modifiedby	text,
+	modifiedby	bigint,
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (customerid, modifieddate, active, status )
-)
+	PRIMARY KEY (customerid)
+);
 
-CREATE TABLE som.users (
-	userid			text,
-	customerid		text,
-	username		text,
-	employeeid		text,
-	firstname		text,
-	lastname		text,
-	active			boolean,
-	password		text,
-	emailid			text,
-	emailid1		text,
-	mobileno		text,
-	mobileno1		text,
-	otp			int,
-	tokenkey		text,
-	tokenkeyexpirydate	timestamp,
-	profileimageurl		text,
-	pwdchangeflag		boolean,
-	pwdchangedate		timestamp,
+CREATE TABLE users (
+	userid bigint,
+	active boolean,
+	addressline1 text,
+	addressline2 text,
+	addressline3 text,
+	city text,
+	comments text,
+	country text,
+	countryname text,
+	createdby bigint,
+	createdbyname text,
+	createddate timestamp,
+	customerid bigint,
+	customername text,
+	emailid text,
+	emailid1 text,
+	employeeid text,
+	firstname text,
+	lastname text,
+	mobileno text,
+	mobileno1 text,
+	modifiedby bigint,
+	modifiedbyname text,
+	modifieddate timestamp,
+	otp int,
+	password text,
+	profileimageurl text,
+	pwdchangedate timestamp,
+	pwdchangeflag boolean,
+	roleid text,
+	rolename text,
+	state text,
+	statename text,
+	status boolean,
+	tokenkey text,
+	tokenkeyexpirydate timestamp,
+	username text,
+	zipcode text,
+	PRIMARY KEY (userid)
+);
+
+CREATE TABLE roles (
 	roleid		text,
 	rolename	text,
+	customerid	bigint,
 	comments	text,
-	addressline1	text,
-	addressline2	text,
-	addressline3	text,
-	city		text,
-	state		text,
-	country		text,
-	zipcode		text,
-	createdby	text,
+	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
-	modifiedby	text,
+	modifiedby	bigint,
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (userid, modifieddate, emailid, mobileno, customerid, active, status)
-)
+	PRIMARY KEY (roleid)
+);
 
-CREATE TABLE som.roles (
-	roleid		text,
-	rolename	text,
-	customerid	text,
-	comments	text,
-	createdby	text,
-	createdbyname	text,
-	createddate	timestamp,
-	modifiedby	text,
-	modifiedbyname	text,
-	modifieddate	timestamp,
-	status		boolean,
-	PRIMARY KEY (roleid, modifieddate, customerid, status )
-)
-
-CREATE TABLE som.configuration (
-	configurationid	text,
+CREATE TABLE configuration (
+	configurationid	bigint,
 	configurationname	text,
-	customerid	text,
+	customerid	bigint,
 	active		boolean,
 	type		text,	//Email/SMS
 	source		text, //Primary/Secondary
@@ -91,51 +94,52 @@ CREATE TABLE som.configuration (
 	porttls		text,
 	portsls		text,
 	comments	text,
-	createdby	text,
+	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
-	modifiedby	text,
+	modifiedby	bigint,
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (configurationid, modifieddate, customerid, active, status )
-)
+	PRIMARY KEY (configurationid)
+);
 
-CREATE TABLE som.group (
-	groupid		text,
+CREATE TABLE group (
+	groupid		bigint,
 	groupname	text,
-	customerid	text,
+	customerid	bigint,
 	active		boolean,
 	comments	text,
 	type		text,	//Email/SMS
-	createdby	text,
+	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
-	modifiedby	text,
+	modifiedby	bigint,
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (groupid, modifieddate, customerid, active, status )
-)
+	PRIMARY KEY (groupid)
+);
 
 
-CREATE TABLE som.groupmember (
+CREATE TABLE groupmember (
 	groupmemberid	bigint,
-	groupid		text,
+	groupid		bigint,
 	groupname	text,
 	customerid	text,
-	userid		text,
+	userid		bigint,
 	username	text,
 	usercontact	text,  //0,1,2...
-	createdby	text,
+	parentgroupname	text,
+	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
-	modifiedby	text,
+	modifiedby	bigint,
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (groupmemberid, modifieddate, customerid, status )
-)
+	PRIMARY KEY (groupmemberid )
+);
 
 
 CREATE TABLE som.messages (
