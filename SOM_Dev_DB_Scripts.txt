@@ -211,6 +211,7 @@ CREATE TABLE states (
 	PRIMARY KEY (state, statename, status)
 ) ;
 ------------------------------------
+CREATE CUSTOM INDEX country_idx ON states (country) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 CREATE CUSTOM INDEX statename_idx ON states (statename) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 ------------------------------------
 CREATE TABLE country (
@@ -220,6 +221,7 @@ CREATE TABLE country (
 	PRIMARY KEY (country, countryname, status)
 );
 ------------------------------------
+
 CREATE CUSTOM INDEX countryname_idx ON country (countryname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 
 ------------------------------------------------------------------------------------------------------------
