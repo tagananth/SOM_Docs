@@ -92,6 +92,7 @@ CREATE TABLE roles (
 	PRIMARY KEY (roleid)
 );
 
+
 CREATE TABLE configuration (
 	configurationid	bigint,
 	configurationname	text,
@@ -102,7 +103,7 @@ CREATE TABLE configuration (
 	fromid		text,
 	fromname	text,
 	accountsid	text, // Only For SMS
-	hostaddress 	text,
+	hostaddress text,
 	username	text,
 	password	text, 
 	authtoken	text,// Only For SMS
@@ -116,16 +117,20 @@ CREATE TABLE configuration (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (configurationid)
+	requesturl text,
+	responseurl text,
+	customername text,
+	PRIMARY KEY (configurationid )
 );
 
+
 CREATE TABLE group (
-	groupid		bigint,
+	groupid	bigint,
 	groupname	text,
 	customerid	bigint,
 	active		boolean,
-	comments	text,
 	type		text,	//Email/SMS
+	comments	text,
 	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
@@ -133,19 +138,28 @@ CREATE TABLE group (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
-	PRIMARY KEY (groupid)
+	customername text,
+	PRIMARY KEY (groupid )
 );
+
+------------------------------------------------------------------------------------------------------------------------
+CREATE CUSTOM INDEX fn_contains_grpname ON group (groupname) USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = { 'mode': 'CONTAINS' };
+------------------------------------------------------------------------------------------------------------------------
 
 
 CREATE TABLE groupmember (
 	groupmemberid	bigint,
-	groupid		bigint,
-	groupname	text,
-	customerid	text,
-	userid		bigint,
+	groupid	bigint,
+	groupname text,
+	customerid	bigint,
+	userid	bigint,
 	username	text,
-	usercontact	text,  //0,1,2...
-	parentgroupname	text,
+	usercontact	text,
+	parentgroupid	text,	
+	active		boolean,
+	type		text,	//Email/SMS
+	comments	text,
 	createdby	bigint,
 	createdbyname	text,
 	createddate	timestamp,
@@ -153,8 +167,27 @@ CREATE TABLE groupmember (
 	modifiedbyname	text,
 	modifieddate	timestamp,
 	status		boolean,
+	customername text,
 	PRIMARY KEY (groupmemberid )
 );
+
+--------------------------------------------------------------------------------------------------------------------------------------
+CREATE CUSTOM INDEX fn_contains_parentgroupid ON groupmember (parentgroupid) USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = { 'mode': 'CONTAINS' };
+---------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE sequence(
+	sequenceid bigint,
+	tablename text,
+	PRIMARY KEY(tablename)
+);
+
+
+--------------------------------------------------------------------------------
+insert into sequence(tablename,sequenceid) values ('Configuration',1);
+
+insert into sequence(tablename,sequenceid) values ('Group',1);
+---------------------------------------------------------------------------------
 
 
 CREATE TABLE messages (
