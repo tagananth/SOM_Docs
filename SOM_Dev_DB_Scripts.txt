@@ -1,96 +1,19 @@
 CREATE KEYSPACE som_dev WITH durable_writes = true AND replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1};
 
-CREATE TABLE customer (
-	customerid	bigint,
-	customername	text,
-	active		boolean,
-	comments	text,
-	addressline1	text,
-	addressline2	text,
-	addressline3	text,
-	city		text,
-	state		text,
-	country		text,
-	zipcode		text,
-	createdby	bigint,
-	createdbyname	text,
-	createddate	timestamp,
-	modifiedby	bigint,
-	modifiedbyname	text,
-	modifieddate	timestamp,
-	status		boolean,
-	PRIMARY KEY (customerid)
-);
+CREATE TABLE customer ( customerid bigint, customername text, active  boolean, comments text, addressline1 text, addressline2 text, addressline3 text, city  text, state  text, country  text, zipcode  text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (customerid) );
 
-CREATE TABLE users (
-	userid bigint,
-	active boolean,
-	addressline1 text,
-	addressline2 text,
-	addressline3 text,
-	city text,
-	comments text,
-	country text,
-	countryname text,
-	createdby bigint,
-	createdbyname text,
-	createddate timestamp,
-	customerid bigint,
-	customername text,
-	emailid text,
-	emailid1 text,
-	employeeid text,
-	firstname text,
-	lastname text,
-	mobileno text,
-	mobileno1 text,
-	modifiedby bigint,
-	modifiedbyname text,
-	modifieddate timestamp,
-	otp int,
-	password text,
-	profileimageurl text,
-	pwdchangedate timestamp,
-	pwdchangeflag boolean,
-	roleid text,
-	rolename text,
-	state text,
-	statename text,
-	status boolean,
-	tokenkey text,
-	tokenkeyexpirydate timestamp,
-	username text,
-	zipcode text,
-	PRIMARY KEY (userid)
-);
+CREATE TABLE users ( userid bigint, active boolean, addressline1 text, addressline2 text, addressline3 text, city text, comments text, country text, countryname text, createdby bigint, createdbyname text, createddate timestamp, customerid bigint, customername text, emailid text, emailid1 text, employeeid text, firstname text, lastname text, mobileno text, mobileno1 text, modifiedby bigint, modifiedbyname text, modifieddate timestamp, otp int, password text, profileimageurl text, pwdchangedate timestamp, pwdchangeflag boolean, roleid text, rolename text, state text, statename text, status boolean, tokenkey text, tokenkeyexpirydate timestamp, username text, zipcode text, PRIMARY KEY (userid) );
 
-CREATE CUSTOM INDEX username_idx ON som_dev.users (username) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-CREATE CUSTOM INDEX customerid_idx ON som_dev.users (customerid) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
-CREATE CUSTOM INDEX firstname_idx ON som_dev.users (firstname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-CREATE CUSTOM INDEX lastname_idx ON som_dev.users (lastname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-CREATE CUSTOM INDEX emailid_idx ON som_dev.users (emailid) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-CREATE CUSTOM INDEX emailid1_idx ON som_dev.users (emailid1) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-CREATE CUSTOM INDEX mobileno_idx ON som_dev.users (mobileno) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
-CREATE CUSTOM INDEX mobileno1_idx ON som_dev.users (mobileno1) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
+CREATE CUSTOM INDEX username_idx ON users (username) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX customername_idx ON users (customername) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
+CREATE CUSTOM INDEX firstname_idx ON users (firstname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX lastname_idx ON users (lastname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX emailid_idx ON users (emailid) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX emailid1_idx ON users (emailid1) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX mobileno_idx ON users (mobileno) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
+CREATE CUSTOM INDEX mobileno1_idx ON users (mobileno1) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
 
-
-
-
-
-CREATE TABLE roles (
-	roleid		text,
-	rolename	text,
-	customerid	bigint,
-	comments	text,
-	createdby	bigint,
-	createdbyname	text,
-	createddate	timestamp,
-	modifiedby	bigint,
-	modifiedbyname	text,
-	modifieddate	timestamp,
-	status		boolean,
-	PRIMARY KEY (roleid)
-);
+CREATE TABLE roles ( roleid  text, rolename text, customerid bigint, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (roleid) );
 
 CREATE TABLE configuration (
 	configurationid	bigint,
@@ -193,46 +116,30 @@ CREATE TABLE attachments (
 	attachmenturl   text,
 	PRIMARY KEY (attachmentid)
 );
-------------------------------------
-CREATE TABLE cities (
-	autoid bigint,
-	city text,
-	state text,
-	status boolean,
-	PRIMARY KEY (autoid, status)
-) ;
-------------------------------------
-CREATE CUSTOM INDEX city_idx ON cities (city) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-------------------------------------										      
+------------------------------------------------------------------------------------------------------------
+CREATE TABLE cities ( autoid bigint, city text, state text, status boolean, PRIMARY KEY (autoid, status) ) ;
 
-CREATE TABLE states (
-	state text,
-	statename text,
-	country text,
-	status boolean,
-	PRIMARY KEY (state, statename, status)
-) ;
-------------------------------------
+CREATE CUSTOM INDEX city_idx ON cities (city) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+------------------------------------------------------------------------------------------------------------
+									      
+------------------------------------------------------------------------------------------------------------		
+CREATE TABLE states ( state text, statename text, country text, status boolean, PRIMARY KEY (state, statename, status) ) ;
+
 CREATE CUSTOM INDEX country_idx ON states (country) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 CREATE CUSTOM INDEX statename_idx ON states (statename) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
-------------------------------------
-CREATE TABLE country (
-	country text,
-	countryname text,
-	status boolean,
-	PRIMARY KEY (country, countryname, status)
-)WITH CLUSTERING ORDER BY (countryname ASC);
-
-------------------------------------
-
-CREATE CUSTOM INDEX countryname_idx ON country (countryname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------
+CREATE TABLE country ( country text, countryname text, status boolean, PRIMARY KEY (country, countryname, status) )WITH CLUSTERING ORDER BY (countryname ASC);
+
+CREATE CUSTOM INDEX countryname_idx ON country (countryname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 
 INSERT INTO country (country, countryname,  status) VALUES ('IN', 'India', true);
 INSERT INTO country (country, countryname,  status) VALUES ('US', 'United States of America', true);
 INSERT INTO country (country, countryname,  status) VALUES ('CA', 'Canada', true);
 INSERT INTO country (country, countryname,  status) VALUES ('SG', 'Singapore', true);
+------------------------------------------------------------------------------------------------------------
+
 ------------------------------------------------------------------------------------------------------------
 INSERT INTO states (state, statename, country, status) VALUES ('AK','Alaska','US', true);
 INSERT INTO states (state, statename, country, status) VALUES ('AL','Alabama','US', true);
