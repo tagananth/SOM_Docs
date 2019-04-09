@@ -1,60 +1,132 @@
-CREATE TABLE som.company (
-	company_id	text,
-	company_name	text,
-	address		text,
-	company_status	text,
-	created_by	text,
-	created_date	timestamp,
-	modified_by	text,
-	modified_date	timestamp,
-	status		boolean,
-	PRIMARY KEY (company_id, modified_date, company_status, status )
-)
+CREATE KEYSPACE som_dev WITH durable_writes = true AND replication = { 'class' : 'SimpleStrategy', 'replication_factor' : 1};
 
-CREATE TABLE som.users (
-	employee_id		text,
-	company_id		text,
-	customer_id		text,
-	user_id			text,
-	first_name		text,
-	last_name		text,
-	user_status		text,
-	password		text,
-	email_id		text,
-	email_id_1		text,
-	mobile_no		bigint
-	mobile_no_1		bigint
-	last_otp		int
-	token			text,
-	token_expiry_date	timestamp,
-	profile_image_url	text,
-	pwd_change_flag		boolean,
-	pwd_change_date		timestamp,
-	created_by		text,
-	created_date		timestamp,
-	modified_by		text,
-	modified_date		timestamp,
-	status			boolean,
-	PRIMARY KEY (employee_id, modified_date, company_id, user_status, status )
-)
+CREATE TABLE customer ( customerid bigint, customername text, active  boolean, comments text, addressline1 text, addressline2 text, addressline3 text, city  text, state  text, country  text, zipcode  text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (customerid) );
 
-CREATE TABLE som.roles (
-	role_id		text,
-	role_name	text,
-	admin_role	boolean,
-	company_id	text,
-	created_by	text,
-	created_date	timestamp,
-	modified_by	text,
-	modified_date	timestamp,
-	status		boolean,
-	PRIMARY KEY (role_id, modified_date, company_id, status )
-)
+CREATE TABLE users ( userid bigint, active boolean, addressline1 text, addressline2 text, addressline3 text, city text, comments text, country text, countryname text, createdby bigint, createdbyname text, createddate timestamp, customerid bigint, customername text, emailid text, emailid1 text, employeeid text, firstname text, lastname text, mobileno text, mobileno1 text, modifiedby bigint, modifiedbyname text, modifieddate timestamp, otp int, password text, profileimageurl text, pwdchangedate timestamp, pwdchangeflag boolean, roleid text, rolename text, state text, statename text, status boolean, tokenkey text, tokenkeyexpirydate timestamp, username text, zipcode text, PRIMARY KEY (userid) );
 
-CREATE TABLE som.userroles (
-	auto_id		bigint
-	employee_id	text,
-	role_id		text,
-	company_id	text,
-	PRIMARY KEY (auto_id, employee_id )
-)
+INSERT INTO users (userid,active,addressline1,addressline2,addressline3,city,comments,country,countryname,createdby,createdbyname,createddate,customerid,customername,emailid,emailid1,employeeid,firstname,lastname,mobileno,mobileno1,modifiedby,modifiedbyname,modifieddate,otp,password,profileimageurl,pwdchangedate,pwdchangeflag,roleid,rolename,state,statename,status,tokenkey,tokenkeyexpirydate,username,zipcode) VALUES (999,false,'Address 1',null,null,'Chennai',null,null,null,999,null,1549211770225,999,'SOM','noreply.som.tag@gmail.com',null,null,'SuperAdmin','','9677101113',null,999,'',1549211770225,null,'$2a$10$6ol7QvwsL4e/v7lMxwSnnO3L2AYMaVdaqGN5abKHirgl7m/bluFLm',null,1549211770000,false,'Administrator',null,null,null,true,null,null,'noreply.som.tag@gmail.com',null);
+
+CREATE CUSTOM INDEX username_idx ON users (username) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX customername_idx ON users (customername) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
+CREATE CUSTOM INDEX firstname_idx ON users (firstname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX lastname_idx ON users (lastname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX emailid_idx ON users (emailid) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX emailid1_idx ON users (emailid1) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX mobileno_idx ON users (mobileno) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
+CREATE CUSTOM INDEX mobileno1_idx ON users (mobileno1) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
+
+CREATE TABLE roles ( roleid  text, rolename text, customerid bigint, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (roleid) );
+
+
+CREATE TABLE configuration ( configurationid bigint, configurationname text, customerid bigint, active  boolean, type  text,  source  text,  fromid  text, fromname text, accountsid text,  hostaddress text, username text, password text,  authtoken text,  porttls  text, portsls  text, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, requesturl text, responseurl text, customername text, PRIMARY KEY (configurationid ) ); 
+
+CREATE TABLE group ( groupid bigint, groupname text, customerid bigint, active  boolean, type  text, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, customername text, PRIMARY KEY (groupid ) ); 
+
+------------------------------------------------------------------------------------------------------------------------
+CREATE CUSTOM INDEX fn_contains_grpname ON group (groupname) USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = { 'mode': 'CONTAINS' };
+------------------------------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE groupmember ( groupmemberid bigint, groupid bigint, groupname text, customerid bigint, userid bigint, username text, usercontact text, parentgroupid text,  active  boolean, type  text, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, customername text, PRIMARY KEY (groupmemberid ) );
+
+--------------------------------------------------------------------------------------------------------------------------------------
+CREATE CUSTOM INDEX fn_contains_parentgroupid ON groupmember (parentgroupid) USING 'org.apache.cassandra.index.sasi.SASIIndex'
+WITH OPTIONS = { 'mode': 'CONTAINS' };
+---------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE sequence(sequenceid bigint, tablename text, PRIMARY KEY(tablename));
+
+
+--------------------------------------------------------------------------------
+insert into sequence(tablename,sequenceid) values ('Configuration',1000);
+insert into sequence(tablename,sequenceid) values ('Group',1000);
+insert into sequence(tablename,sequenceid) values ('Users',1000);
+insert into sequence(tablename,sequenceid) values ('Customer',1000);
+---------------------------------------------------------------------------------
+
+
+CREATE TABLE messages ( messageid bigint, sendid  text, instanceid text, customerid bigint, userid  bigint, username text, groupid  bigint, groupname text, configurationid bigint, configurationname text, type  text, source  text, emailid  text,  mobileno text, templateid text, message  text, messagestatus text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (messageid) )WITH CLUSTERING ORDER BY ( modifieddate  DESC);
+
+
+------------------------------------
+CREATE TABLE attachments (attachmentid bigint, messageid bigint, attachmenturl text, PRIMARY KEY (attachmentid));
+
+------------------------------------------------------------------------------------------------------------
+CREATE TABLE cities ( autoid bigint, city text, state text, status boolean, PRIMARY KEY (autoid, status) ) ;
+
+CREATE CUSTOM INDEX city_idx ON cities (city) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+------------------------------------------------------------------------------------------------------------
+									      
+------------------------------------------------------------------------------------------------------------		
+CREATE TABLE states ( state text, statename text, country text, status boolean, PRIMARY KEY (state, statename, status) ) ;
+
+CREATE CUSTOM INDEX country_idx ON states (country) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+CREATE CUSTOM INDEX statename_idx ON states (statename) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------
+CREATE TABLE country ( country text, countryname text, status boolean, PRIMARY KEY (country, countryname, status) )WITH CLUSTERING ORDER BY (countryname ASC);
+
+CREATE CUSTOM INDEX countryname_idx ON country (countryname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
+
+INSERT INTO country (country, countryname,  status) VALUES ('IN', 'India', true);
+INSERT INTO country (country, countryname,  status) VALUES ('US', 'United States of America', true);
+INSERT INTO country (country, countryname,  status) VALUES ('CA', 'Canada', true);
+INSERT INTO country (country, countryname,  status) VALUES ('SG', 'Singapore', true);
+------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------
+INSERT INTO states (state, statename, country, status) VALUES ('AK','Alaska','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('AL','Alabama','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('AR','Arkansas','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('AZ','Arizona','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('CA','California','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('CO','Colorado','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('CT','Connecticut','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('DC','District of Columbia','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('DE','Delaware','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('FL','Florida','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('GA','Georgia','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('HI','Hawaii','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('IA','Iowa','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('ID','Idahoia','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('IL','Illinois','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('IN','Indianacut','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('KS','Kansas','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('KY','Kentucky','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('LA','Louisiana','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MA','Massachusetts','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MD','Maryland','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('ME','Maine','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MI','Michigan','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MN','Minnesota','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MO','Missouri','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MS','Mississippi','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('MT','Montana','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NC','North Carolina','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('ND','North Dakota','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NE','Nebraska','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NH','New Hampshire','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NJ','New Jersey','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NM','New Mexico','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NV','Nevada','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('NY','New York','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('OH','Ohio','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('OK','Oklahoma','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('OR','Oregon','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('PA','Pennsylvania','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('PR','Puerto Rico','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('RI','Rhode Island','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('SC','South Carolina','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('SD','South Dakota','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('TN','Tennessee','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('TX','Texas','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('UT','Utah','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('VA','Virginia','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('VI','Virgin Islands','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('VT','Vermont','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('WA','Washington','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('WI','Wisconsin','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('WV','West Virginia','US', true);
+INSERT INTO states (state, statename, country, status) VALUES ('WY','Wyoming','US', true);

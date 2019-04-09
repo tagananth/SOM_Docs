@@ -1,0 +1,130 @@
+docker run --name cassandra -d -e CASSANDRA_BROADCAST_ADDRESS=192.168.99.100 -p 9042:9042 cassandra:latest
+
+docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "$CASSANDRA_PORT_9042_TCP_ADDR"'
+
+docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "$CASSANDRA_BROADCAST_ADDRESS"' 
+or
+docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "192.168.99.100"'
+
+docker run -p 2181:2181 -d --net=host --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-zookeeper:4.0.0
+
+docker run -p 9092:9092 -d --net=host --name=kafka -e KAFKA_ZOOKEEPER_CONNECT=192.168.99.100:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.99.100:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
+
+docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic internal-topic --partitions 2 --replication-factor 1 --if-not-exists --zookeeper 192.168.99.100:2181
+
+docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic message-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper 192.168.99.100:2181
+
+/C/Users/kalya/git/SOM_2.0_Service_20190215/SOM/som-eureka-server
+/C/Users/kalya/git/SOM_2.0_Service_20190404/SOM/som-eureka-server
+
+docker image build -t som-eureka-server .
+
+docker tag som-eureka-server tagananth/som2.0:som-eureka-server
+
+docker push tagananth/som2.0:som-eureka-server
+
+
+
+docker run -p 8761:8761 -d som-eureka-server
+
+OR
+
+docker run -p 8761:8761 tagananth/som2.0:som-eureka-server
+
+OR
+
+docker run -p 8761:8761 -d tagananth/som2.0:som-eureka-server
+
+/C/Users/kalya/git/SOM_2.0_Service_20190404/SOM/som-oauth-server
+
+/C/Users/kalya/git/SOM_2.0_Service_20190215/SOM/som-oauth-server
+
+docker image build -t som-oauth-server .
+
+docker tag som-oauth-server tagananth/som2.0:som-oauth-server
+
+docker push tagananth/som2.0:som-oauth-server
+
+docker run -p 8090:8090 -d som-oauth-server 
+OR 
+docker run -p 8090:8090 -d tagananth/som2.0:som-oauth-server
+
+docker run -p 8090:8090 tagananth/som2.0:som-oauth-server
+
+/C/Users/kalya/git/SOM_2.0_Service_20190215/SOM/som-admin
+
+/C/Users/kalya/git/SOM_2.0_Service_20190404/SOM/som-admin
+
+docker image build -t som-admin .
+
+docker tag som-admin tagananth/som2.0:som-admin
+
+docker push tagananth/som2.0:som-admin
+
+docker run -p 8100:8100 -d som-admin
+
+OR
+
+docker run -p 8100:8100 -d tagananth/som2.0:som-admin
+
+OR
+
+docker run -p 8100:8100 tagananth/som2.0:som-admin
+
+
+/C/Users/kalya/git/SOM_2.0_Service_20190404/SOM/som-sender
+
+docker image build -t som-sender .
+
+docker tag som-sender tagananth/som2.0:som-sender
+
+docker push tagananth/som2.0:som-sender
+
+docker run -p 8200:8200 -d som-sender
+
+OR
+
+docker run -p 8200:8200 -d tagananth/som2.0:som-sender
+
+OR
+
+docker run -p 8200:8200 tagananth/som2.0:som-sender
+
+============================================================================================================================
+Issues
+
+Error response from daemon: Get https://registry-1.docker.io/v2/: dial tcp: lookup registry-1.docker.io on 10.0.2.3:53: read udp 10.0.2.15:57002->10.0.2.3:53: i/o timeout
+docker-machine restart
+
+
+============================================================================================================================
+
+docker run -p 9092:9092 -d --net=host --name=kafka -e KAFKA_ZOOKEEPER_CONNECT=172.17.0.1:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://172.17.0.1:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
+
+
+docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic internal-topic --partitions 2 --replication-factor 1 --if-not-exists --zookeeper 172.17.0.1:2181
+
+
+docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic message-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper 172.17.0.1:2181
+
+
+som-eureka-server:latest
+
+docker tag som-eureka-server:latest
+
+docker push tagananth/som2.0:som-eureka-server
+
+
+docker run --name cassandra -d -e CASSANDRA_BROADCAST_ADDRESS=172.17.0.1 -p 9042:9042 cassandra:latest
+
+
+docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "172.17.0.1"'
+
+
+docker run -p 8090:8090 tagananth/som2.0:som-oauth-server
+
+
+docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "172.17.0.1"'
+
+ec2-52-204-210-22.compute-1.amazonaws.com
+ec2-52-204-210-22.compute-1.amazonaws.com
