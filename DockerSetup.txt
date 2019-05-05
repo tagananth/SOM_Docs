@@ -6,6 +6,8 @@ docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "$CAS
 or
 docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "192.168.99.100"'
 
+docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "52.22.83.229"'
+
 docker run -p 2181:2181 -d --net=host --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-zookeeper:4.0.0
 
 docker run -p 9092:9092 -d --net=host --name=kafka -e KAFKA_ZOOKEEPER_CONNECT=192.168.99.100:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.99.100:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
@@ -35,6 +37,8 @@ OR
 
 docker run -p 8761:8761 -d tagananth/som2.0:som-eureka-server
 
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8761:8761 -d tagananth/som2.0:som-eureka-server
+
 /C/Users/kalya/git/SOM_2.0_Service_20190404/SOM/som-oauth-server
 
 /C/Users/kalya/git/SOM_2.0_Service_20190215/SOM/som-oauth-server
@@ -48,8 +52,10 @@ docker push tagananth/som2.0:som-oauth-server
 docker run -p 8090:8090 -d som-oauth-server 
 OR 
 docker run -p 8090:8090 -d tagananth/som2.0:som-oauth-server
-
+OR
 docker run -p 8090:8090 tagananth/som2.0:som-oauth-server
+OR
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8090:8090 -d tagananth/som2.0:som-oauth-server
 
 /C/Users/kalya/git/SOM_2.0_Service_20190215/SOM/som-admin
 
@@ -65,7 +71,7 @@ docker run -p 8100:8100 -d som-admin
 
 OR
 
-docker run -p 8100:8100 -d tagananth/som2.0:som-admin
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8100:8100 -d tagananth/som2.0:som-admin
 
 OR
 
@@ -89,6 +95,37 @@ docker run -p 8200:8200 -d tagananth/som2.0:som-sender
 OR
 
 docker run -p 8200:8200 tagananth/som2.0:som-sender
+
+OR 
+
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8200:8200 tagananth/som2.0:som-sender
+
+OR 
+
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8200:8200 -d tagananth/som2.0:som-sender
+
+============================================================================================================================
+
+docker image build -t somui .
+
+docker tag somui tagananth/som2.0:somui
+
+docker push tagananth/som2.0:somui
+
+docker run -p 80:80 -d tagananth/som2.0:somui
+
+============================================================================================================================
+
+docker image build -t som-dashboard .
+
+docker tag som-dashboard tagananth/som2.0:som-dashboard
+
+docker push tagananth/som2.0:som-dashboard
+
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 4000:4000 -d tagananth/som2.0:som-dashboard
+
+
+
 
 ============================================================================================================================
 Issues
@@ -128,3 +165,21 @@ docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "172.
 
 ec2-52-204-210-22.compute-1.amazonaws.com
 ec2-52-204-210-22.compute-1.amazonaws.com
+ec2-3-84-57-105.compute-1.amazonaws.com
+docker run -e JAVA_OPTS='-Xmx256m' -p tagananth/som2.0:somui
+
+==============================================================================================================
+ec2-52-22-83-229.compute-1.amazonaws.com
+
+docker start cassandra
+docker start zookeeper
+docker start kafka
+
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8761:8761 -d tagananth/som2.0:som-eureka-server
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8090:8090 -d tagananth/som2.0:som-oauth-server
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8100:8100 -d tagananth/som2.0:som-admin
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8200:8200 -d tagananth/som2.0:som-sender
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8300:8300 -d tagananth/som2.0:som-view
+docker run -p 80:80 -d tagananth/som2.0:somui
+
+docker exec it <image-id> /bin/bash
