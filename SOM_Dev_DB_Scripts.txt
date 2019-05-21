@@ -2,9 +2,11 @@ CREATE KEYSPACE som_dev WITH durable_writes = true AND replication = { 'class' :
 
 CREATE TABLE customer ( customerid bigint, customername text, active  boolean, comments text, addressline1 text, addressline2 text, addressline3 text, city  text, state  text, country  text, zipcode  text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (customerid) );
 
+insert into customer ( customerid, customername, active, comments, addressline1, addressline2, addressline3, city, state, country, zipcode, createdby, createdbyname, createddate, modifiedby, modifiedbyname, modifieddate, status ) values ( 1000,'Default Configuration',true,'Base Configuration','addressline1','addressline2','addressline3','Chennai','TamilNadu','IN','500099',999,'SuperAdmin',1549211770225,999,'SuperAdmin',1549211770225,true);
+
 CREATE TABLE users ( userid bigint, active boolean, addressline1 text, addressline2 text, addressline3 text, city text, comments text, country text, countryname text, createdby bigint, createdbyname text, createddate timestamp, customerid bigint, customername text, emailid text, emailid1 text, employeeid text, firstname text, lastname text, mobileno text, mobileno1 text, modifiedby bigint, modifiedbyname text, modifieddate timestamp, otp int, password text, profileimageurl text, pwdchangedate timestamp, pwdchangeflag boolean, roleid text, rolename text, state text, statename text, status boolean, tokenkey text, tokenkeyexpirydate timestamp, username text, zipcode text, PRIMARY KEY (userid) );
 
-INSERT INTO users (userid,active,addressline1,addressline2,addressline3,city,comments,country,countryname,createdby,createdbyname,createddate,customerid,customername,emailid,emailid1,employeeid,firstname,lastname,mobileno,mobileno1,modifiedby,modifiedbyname,modifieddate,otp,password,profileimageurl,pwdchangedate,pwdchangeflag,roleid,rolename,state,statename,status,tokenkey,tokenkeyexpirydate,username,zipcode) VALUES (999,false,'Address 1',null,null,'Chennai',null,null,null,999,null,1549211770225,999,'SOM','noreply.som.tag@gmail.com',null,null,'SuperAdmin','','9677101113',null,999,'',1549211770225,null,'$2a$10$6ol7QvwsL4e/v7lMxwSnnO3L2AYMaVdaqGN5abKHirgl7m/bluFLm',null,1549211770000,false,'Administrator',null,null,null,true,null,null,'SuperAdmin',null);
+INSERT INTO users (userid,active,addressline1,addressline2,addressline3,city,comments,country,countryname,createdby,createdbyname,createddate,customerid,customername,emailid,emailid1,employeeid,firstname,lastname,mobileno,mobileno1,modifiedby,modifiedbyname,modifieddate,otp,password,profileimageurl,pwdchangedate,pwdchangeflag,roleid,rolename,state,statename,status,tokenkey,tokenkeyexpirydate,username,zipcode) VALUES (999,false,'Address 1',null,null,'Chennai','UserName is SuperAdmin and Password is Nanda@123',null,null,999,null,1549211770225,999,'SOM','master.som.2.0@gmail.com',null,null,'SuperAdmin','','9677101113',null,999,'',1549211770225,null,'$2a$10$4nXSo3c9PbEMOa.n7depOun9GTUIyHHs41YbvmL0Ch.ewMYEj9dN6',null,1549211770000,false,'Administrator',null,null,null,true,null,null,'SuperAdmin',null);
 
 CREATE CUSTOM INDEX username_idx ON users (username) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 CREATE CUSTOM INDEX customername_idx ON users (customername) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'false'};
@@ -19,6 +21,9 @@ CREATE TABLE roles ( roleid  text, rolename text, customerid bigint, comments te
 
 
 CREATE TABLE configuration ( configurationid bigint, configurationname text, customerid bigint, active  boolean, type  text,  source  text,  fromid  text, fromname text, accountsid text,  hostaddress text, username text, password text,  authtoken text,  porttls  text, portsls  text, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, requesturl text, responseurl text, customername text, PRIMARY KEY (configurationid ) ); 
+
+INSERT INTO configuration (configurationid,accountsid,active,authtoken,comments,configurationname,createdby,createdbyname,createddate,customerid,customername,fromid,fromname,hostaddress,modifiedby,modifiedbyname,modifieddate,password,portsls,porttls,requesturl,responseurl,source,status,type,username) VALUES (20,null,true,'','Demo EMAIL Configuration','Test Config',1002,'Tiwari, Niraj',1552826978013,1000,'AirTel','noreply.som.tag@gmail.com','TAG SUPPORT','smtp.gmail.com',1002,'Tiwari, Niraj',1552826978013,'Noreplysomta8','','587','','','PRIMARY',true,'Email','noreply.som.tag');
+INSERT INTO configuration (configurationid,accountsid,active,authtoken,comments,configurationname,createdby,createdbyname,createddate,customerid,customername,fromid,fromname,hostaddress,modifiedby,modifiedbyname,modifieddate,password,portsls,porttls,requesturl,responseurl,source,status,type,username) VALUES (18,null,true,'uL5lCG9iTZ2hVeEUSX9zYw==','','SMS',1002,'Kumar, Nanda',1552760772409,1000,'AirTel','','','_FJ0GDq1QeKhz1NJG_73oQ==',1002,'Tiwari, Niraj',1556966569048,'sanjeev','','3333','https://platform.clickatell.com/messages','https://platform.clickatell.com/public-client/message/status','PRIMARY',true,'SMS','sanjeev');
 
 CREATE TABLE group ( groupid bigint, groupname text, customerid bigint, active  boolean, type  text, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, customername text, PRIMARY KEY (groupid ) ); 
 
@@ -53,7 +58,7 @@ CREATE TABLE messages ( messageid bigint, sendid  text, instanceid text, custome
 CREATE TABLE attachments (attachmentid bigint, messageid bigint, attachmenturl text, PRIMARY KEY (attachmentid));
 
 ------------------------------------------------------------------------------------------------------------
-CREATE TABLE cities ( autoid bigint, city text, state text, status boolean, PRIMARY KEY (autoid, status) ) ;
+CREATE TABLE cities ( autoid bigint,zipcode bigint, city text, state text, status boolean, PRIMARY KEY (autoid, status) ) ;
 
 CREATE CUSTOM INDEX city_idx ON cities (city) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 ------------------------------------------------------------------------------------------------------------
@@ -66,14 +71,14 @@ CREATE CUSTOM INDEX statename_idx ON states (statename) USING 'org.apache.cassan
 ------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------
-CREATE TABLE country ( country text, countryname text, status boolean, PRIMARY KEY (country, countryname, status) )WITH CLUSTERING ORDER BY (countryname ASC);
+CREATE TABLE country ( country text, countryname text, status boolean, countrycode text, PRIMARY KEY (country, countryname, status) )WITH CLUSTERING ORDER BY (countryname ASC);
 
 CREATE CUSTOM INDEX countryname_idx ON country (countryname) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 
-INSERT INTO country (country, countryname,  status) VALUES ('IN', 'India', true);
-INSERT INTO country (country, countryname,  status) VALUES ('US', 'United States of America', true);
-INSERT INTO country (country, countryname,  status) VALUES ('CA', 'Canada', true);
-INSERT INTO country (country, countryname,  status) VALUES ('SG', 'Singapore', true);
+INSERT INTO country (country, countryname,  status, countrycode) VALUES ('IN', 'India', false, '91');
+INSERT INTO country (country, countryname,  status, countrycode) VALUES ('US', 'United States of America', true, '1');
+INSERT INTO country (country, countryname,  status, countrycode) VALUES ('CA', 'Canada', true, '1');
+INSERT INTO country (country, countryname,  status, countrycode) VALUES ('SG', 'Singapore', false, '65');
 ------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------
@@ -130,6 +135,22 @@ INSERT INTO states (state, statename, country, status) VALUES ('WA','Washington'
 INSERT INTO states (state, statename, country, status) VALUES ('WI','Wisconsin','US', true);
 INSERT INTO states (state, statename, country, status) VALUES ('WV','West Virginia','US', true);
 INSERT INTO states (state, statename, country, status) VALUES ('WY','Wyoming','US', true);
+
+INSERT INTO states (state, statename, country, status) VALUES ('Singapore','Singapore','SG', true);
+
+INSERT INTO states (state, statename, country, status) VALUES ('Alberta','Alberta','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('British Columbia','British Columbia','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Manitoba','Manitoba','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('New Brunswick','New Brunswick','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Newfoundland and Labrador','Newfoundland and Labrador','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Nova Scotia','Nova Scotia','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Ontario','Ontario','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Prince Edward Island','Prince Edward Island','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Quebec','Quebec','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Saskatchewan','Saskatchewan','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Northwest Territories','Northwest Territories','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Nunavut','Nunavut','CA', true);
+INSERT INTO states (state, statename, country, status) VALUES ('Yukon','Yukon','CA', true);
 ------------------------------------------------------------------------------------------------------
 CREATE TABLE som_dev.message (messageid bigint,sendid text,instanceid text,customerid bigint,customername text,userid bigint,active   boolean,username text,groupid bigint,groupname text,configurationid bigint,configurationname text,type text, source text, emailid text, mobilenumber text,templateid bigint,subject text,message text,messagestatus text, createdby bigint,createdbyname text,createddate timestamp,modifiedby bigint,modifiedbyname text,modifieddate timestamp,status boolean,comments text,PRIMARY KEY (messageid, modifieddate))WITH CLUSTERING ORDER BY ( modifieddate desc);
 ------------------------------------------------------------------------------------------------------

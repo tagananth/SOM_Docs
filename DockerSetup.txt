@@ -10,9 +10,16 @@ docker run -it --link cassandra:cassandra --rm cassandra sh -c 'exec cqlsh "52.2
 
 docker run -p 2181:2181 -d --net=host --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-zookeeper:4.0.0
 
+docker run -p 2181:2181 -d --rm zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 confluentinc/cp-zookeeper:4.0.0
+
 docker run -p 9092:9092 -d --net=host --name=kafka -e KAFKA_ZOOKEEPER_CONNECT=192.168.99.100:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.99.100:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 confluentinc/cp-kafka:4.0.0
 
+docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic internal-topic --partitions 2 --replication-factor 1 --if-not-exists --zookeeper 172.17.0.1:2181
+
 docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic internal-topic --partitions 2 --replication-factor 1 --if-not-exists --zookeeper 192.168.99.100:2181
+
+docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic message-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper 172.17.0.1:2181
+
 
 docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --topic message-topic --partitions 1 --replication-factor 1 --if-not-exists --zookeeper 192.168.99.100:2181
 
@@ -22,8 +29,11 @@ docker run --net=host --rm confluentinc/cp-kafka:4.0.0 kafka-topics --create --t
 docker image build -t som-eureka-server .
 
 docker tag som-eureka-server tagananth/som2.0:som-eureka-server
+docker tag som-eureka-server tagananth/som2.0.uat:som-eureka-server
+
 
 docker push tagananth/som2.0:som-eureka-server
+docker push tagananth/som2.uat:som-eureka-server
 
 
 
@@ -46,8 +56,10 @@ docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8761:8761 -d tagananth/som2.0:som-eur
 docker image build -t som-oauth-server .
 
 docker tag som-oauth-server tagananth/som2.0:som-oauth-server
+docker tag som-oauth-server tagananth/som2.0.uat:som-oauth-server
 
 docker push tagananth/som2.0:som-oauth-server
+docker push tagananth/som2.0.uat:som-oauth-server
 
 docker run -p 8090:8090 -d som-oauth-server 
 OR 
@@ -64,8 +76,10 @@ docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8090:8090 -d tagananth/som2.0:som-oau
 docker image build -t som-admin .
 
 docker tag som-admin tagananth/som2.0:som-admin
+docker tag som-admin tagananth/som2.0.uat:som-admin
 
 docker push tagananth/som2.0:som-admin
+docker push tagananth/som2.0.uat:som-admin
 
 docker run -p 8100:8100 -d som-admin
 
@@ -113,6 +127,13 @@ docker tag somui tagananth/som2.0:somui
 docker push tagananth/som2.0:somui
 
 docker run -p 80:80 -d tagananth/som2.0:somui
+
+docker run -p 80:80 -d tagananth/som2.0:somui 
+
+docker run -p 80:80 -d tagananth/som2.0:somui -v default.conf:/etc/nginx/conf.d/default.conf:ro -d nginx
+
+docker run -p 80:80 -v $(pwd)/default.conf:/etc/nginx/conf.d/default.conf:ro -d tagananth/som2.0:somui
+
 
 ============================================================================================================================
 
@@ -177,9 +198,62 @@ docker start kafka
 
 docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8761:8761 -d tagananth/som2.0:som-eureka-server
 docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8090:8090 -d tagananth/som2.0:som-oauth-server
-docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8100:8100 -d tagananth/som2.0:som-admin
+docker run --rm -e JAVA_OPTS='-Xmx256m' \
+-e somEnvironment='uat' \
+-e somDomainUrl='http://ec2-52-22-83-229.compute-1.amazonaws.com' \
+-e somUiServerUrl='http://ec2-3-214-101-10.compute-1.amazonaws.com/somui' \
+-e somAdminPort='8100' \
+-e somAdminContext='som-admin-service' \
+-e somOauthPort='8090' \
+-e somOauthContext='som-oauth-server' \
+-e somSenderPort='8200' \
+-e somSenderContext='som-sender-service' \
+-e somSenderPort='8761' \
+-e somSenderContext='som-eureka-server' \
+-e LOG4J.DIR='/home/ec2-user/logs' \
+-p 8100:8100 -d tagananth/som2.0:som-admin
+
+
 docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8200:8200 -d tagananth/som2.0:som-sender
 docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8300:8300 -d tagananth/som2.0:som-view
 docker run -p 80:80 -d tagananth/som2.0:somui
 
-docker exec it <image-id> /bin/bash
+====================================================================================================================
+docker start zookeeper
+docker start kafka
+
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8761:8761 -d tagananth/som2.0.uat:som-eureka-server
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8090:8090 -d tagananth/som2.0.uat:som-oauth-server
+docker run --rm -e JAVA_OPTS='-Xmx256m' \
+-e somEnvironment='uat' \
+-e somDomainUrl='http://ec2-52-22-83-229.compute-1.amazonaws.com' \
+-e somUiServerUrl='http://ec2-3-214-101-10.compute-1.amazonaws.com/somui' \
+-e somAdminPort='8100' \
+-e somAdminContext='som-admin-service' \
+-e somOauthPort='8090' \
+-e somOauthContext='som-oauth-server' \
+-e somSenderPort='8200' \
+-e somSenderContext='som-sender-service' \
+-e somSenderPort='8761' \
+-e somSenderContext='som-eureka-server' \
+-e LOG4J.DIR='/home/ec2-user/logs' \
+-p 8100:8100 -d tagananth/som2.0.uat:som-admin
+
+
+docker run --rm -e JAVA_OPTS='-Xmx256m' -p 8200:8200 -d tagananth/som2.0.uat:som-sender
+docker run --rm -e JAVA_OPTS='-Xmx128m' -p 8300:8300 -d tagananth/som2.0.uat:som-view
+docker run -p 80:80 -d tagananth/som2.0.uat:somui
+
+====================================================================================================================
+
+docker exec -it <image-id> /bin/bash
+#!/bin/bash
+# Delete all containers
+docker rm $(docker ps -a -q)
+
+docker ps -a | grep som | awk '{print $1}'
+docker rm $(docker ps -a | grep som | awk '{print $1}')
+
+
+# Delete all images
+docker rmi $(docker images -q)
