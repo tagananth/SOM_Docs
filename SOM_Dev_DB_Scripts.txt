@@ -22,6 +22,16 @@ CREATE TABLE roles ( roleid  text, rolename text, customerid bigint, comments te
 
 CREATE TABLE configuration ( configurationid bigint, configurationname text, customerid bigint, active  boolean, type  text,  source  text,  fromid  text, fromname text, accountsid text,  hostaddress text, username text, password text,  authtoken text,  porttls  text, portsls  text, comments text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, requesturl text, responseurl text, customername text, PRIMARY KEY (configurationid ) ); 
 
+
+
+CREATE TABLE schedule (	scheduleid bigint,schedulename text,occurrencetype text,comments text,active boolean,customerid bigint,createdby bigint,createdbyname text,createddate	timestamp,modifiedby bigint, modifiedbyname text,modifieddate	timestamp,status boolean,customername text,PRIMARY KEY (scheduleid)	);
+
+CREATE TABLE scheduledetails(scheduledetailid bigint,scheduleid bigint,schedulename text,userid bigint,username text,groupid bigint,groupname text,scheduletime text,intervalday text,occurrencetype text,startdate text,enddate text,entity text,comments text,customerid bigint,active boolean,createdby bigint,createdbyname text,createddate	timestamp,modifiedby bigint, modifiedbyname text,modifieddate timestamp,status boolean,customername text,PRIMARY KEY (scheduledetailid)	);
+
+
+CREATE CUSTOM INDEX fn_contains_schedulename ON schedule (schedulename) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = { 'mode': 'CONTAINS' };
+
+
 INSERT INTO configuration (configurationid,accountsid,active,authtoken,comments,configurationname,createdby,createdbyname,createddate,customerid,customername,fromid,fromname,hostaddress,modifiedby,modifiedbyname,modifieddate,password,portsls,porttls,requesturl,responseurl,source,status,type,username) VALUES (20,null,true,'','Demo EMAIL Configuration','Test Config',1002,'Tiwari, Niraj',1552826978013,1000,'AirTel','noreply.som.tag@gmail.com','TAG SUPPORT','smtp.gmail.com',1002,'Tiwari, Niraj',1552826978013,'Noreplysomta8','','587','','','PRIMARY',true,'Email','noreply.som.tag');
 INSERT INTO configuration (configurationid,accountsid,active,authtoken,comments,configurationname,createdby,createdbyname,createddate,customerid,customername,fromid,fromname,hostaddress,modifiedby,modifiedbyname,modifieddate,password,portsls,porttls,requesturl,responseurl,source,status,type,username) VALUES (18,null,true,'uL5lCG9iTZ2hVeEUSX9zYw==','','SMS',1002,'Kumar, Nanda',1552760772409,1000,'AirTel','','','_FJ0GDq1QeKhz1NJG_73oQ==',1002,'Tiwari, Niraj',1556966569048,'sanjeev','','3333','https://platform.clickatell.com/messages','https://platform.clickatell.com/public-client/message/status','PRIMARY',true,'SMS','sanjeev');
 
@@ -48,6 +58,9 @@ insert into sequence(tablename,sequenceid) values ('Configuration',1000);
 insert into sequence(tablename,sequenceid) values ('Group',1000);
 insert into sequence(tablename,sequenceid) values ('Users',1000);
 insert into sequence(tablename,sequenceid) values ('Customer',1000);
+insert into sequence(tablename,sequenceid) values ('Schedule',1000);
+insert into sequence(tablename,sequenceid) values ('ScheduleDetails',1000);
+
 ---------------------------------------------------------------------------------
 
 
