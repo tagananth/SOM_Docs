@@ -4,7 +4,7 @@ CREATE TABLE customer ( customerid bigint, customername text, active  boolean, c
 
 insert into customer ( customerid, customername, active, comments, addressline1, addressline2, addressline3, city, state, country, zipcode, createdby, createdbyname, createddate, modifiedby, modifiedbyname, modifieddate, status ) values ( 1000,'Default Configuration',true,'Base Configuration','addressline1','addressline2','addressline3','Chennai','TamilNadu','IN','500099',999,'SuperAdmin',1549211770225,999,'SuperAdmin',1549211770225,true);
 
-CREATE TABLE users ( userid bigint, active boolean, addressline1 text, addressline2 text, addressline3 text, city text, comments text, country text, countryname text, createdby bigint, createdbyname text, createddate timestamp, customerid bigint, customername text, emailid text, emailid1 text, employeeid text, firstname text, lastname text, mobileno text, mobileno1 text, modifiedby bigint, modifiedbyname text, modifieddate timestamp, otp int, password text, profileimageurl text, pwdchangedate timestamp, pwdchangeflag boolean, roleid text, rolename text, state text, statename text, status boolean, tokenkey text, tokenkeyexpirydate timestamp, username text, zipcode text, PRIMARY KEY (userid) );
+CREATE TABLE users ( userid bigint, active boolean, addressline1 text, addressline2 text, addressline3 text, city text, comments text, country text, countryname text, createdby bigint, createdbyname text, createddate timestamp, customerid bigint, customername text, emailid text, emailid1 text, employeeid text, firstname text, lastname text, mobileno text, mobileno1 text, modifiedby bigint, modifiedbyname text, modifieddate timestamp, otp text, password text, profileimageurl text, pwdchangedate timestamp, pwdchangeflag boolean, roleid text, rolename text, state text, statename text, status boolean, tokenkey text, tokenkeyexpirydate timestamp, username text, zipcode text, PRIMARY KEY (userid) );
 
 INSERT INTO users (userid,active,addressline1,addressline2,addressline3,city,comments,country,countryname,createdby,createdbyname,createddate,customerid,customername,emailid,emailid1,employeeid,firstname,lastname,mobileno,mobileno1,modifiedby,modifiedbyname,modifieddate,otp,password,profileimageurl,pwdchangedate,pwdchangeflag,roleid,rolename,state,statename,status,tokenkey,tokenkeyexpirydate,username,zipcode) VALUES (999,false,'Address 1',null,null,'Chennai','UserName is SuperAdmin and Password is Nanda@123',null,null,999,null,1549211770225,999,'SOM','master.som.2.0@gmail.com',null,null,'SuperAdmin','','9677101113',null,999,'',1549211770225,null,'$2a$10$4nXSo3c9PbEMOa.n7depOun9GTUIyHHs41YbvmL0Ch.ewMYEj9dN6',null,1549211770000,false,'Administrator',null,null,null,true,null,null,'SuperAdmin',null);
 
@@ -60,22 +60,24 @@ insert into sequence(tablename,sequenceid) values ('Users',1000);
 insert into sequence(tablename,sequenceid) values ('Customer',1000);
 insert into sequence(tablename,sequenceid) values ('Schedule',1000);
 insert into sequence(tablename,sequenceid) values ('ScheduleDetails',1000);
-
----------------------------------------------------------------------------------
-
-
-CREATE TABLE messages ( messageid bigint, sendid  text, instanceid text, customerid bigint, userid  bigint, username text, groupid  bigint, groupname text, configurationid bigint, configurationname text, type  text, source  text, emailid  text,  mobileno text, templateid text, message  text, messagestatus text, createdby bigint, createdbyname text, createddate timestamp, modifiedby bigint, modifiedbyname text, modifieddate timestamp, status  boolean, PRIMARY KEY (messageid) )WITH CLUSTERING ORDER BY ( modifieddate  DESC);
-
+insert into sequence(tablename,sequenceid) values ('Message',1000);
+insert into sequence(tablename,sequenceid) values ('GroupMember',1000);
+insert into sequence(tablename,sequenceid) values ('Attachment',1000);
 
 ------------------------------------
-CREATE TABLE attachments (attachmentid bigint, messageid bigint, attachmenturl text, PRIMARY KEY (attachmentid));
+CREATE TABLE attachment (attachmentid bigint, messageid bigint, attachmenturl text, PRIMARY KEY (attachmentid));
 
+create table template(templateid bigint, messagename text,  messagesubject text,messagetext text,messagetype text,PRIMARY KEY (templateid ));
+    
+insert into template (templateid, messagename ,  messagesubject ,messagetext ,messagetype)values(100,'mail message','mail subject','mail text','BASE_TEMPLATE');
+	
 ------------------------------------------------------------------------------------------------------------
 CREATE TABLE cities ( autoid bigint,zipcode bigint, city text, state text, status boolean, PRIMARY KEY (autoid, status) ) ;
 
 CREATE CUSTOM INDEX city_idx ON cities (city) USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = {'mode': 'CONTAINS', 'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.StandardAnalyzer', 'case_sensitive': 'true'};
 ------------------------------------------------------------------------------------------------------------
-									      
+						
+						
 ------------------------------------------------------------------------------------------------------------		
 CREATE TABLE states ( state text, statename text, country text, status boolean, PRIMARY KEY (state, statename, status) ) ;
 
@@ -165,7 +167,7 @@ INSERT INTO states (state, statename, country, status) VALUES ('Northwest Territ
 INSERT INTO states (state, statename, country, status) VALUES ('Nunavut','Nunavut','CA', true);
 INSERT INTO states (state, statename, country, status) VALUES ('Yukon','Yukon','CA', true);
 ------------------------------------------------------------------------------------------------------
-CREATE TABLE som_dev.message (messageid bigint,sendid text,instanceid text,customerid bigint,customername text,userid bigint,active   boolean,username text,groupid bigint,groupname text,configurationid bigint,configurationname text,type text, source text, emailid text, mobilenumber text,templateid bigint,subject text,message text,messagestatus text, createdby bigint,createdbyname text,createddate timestamp,modifiedby bigint,modifiedbyname text,modifieddate timestamp,status boolean,comments text,PRIMARY KEY (messageid, modifieddate))WITH CLUSTERING ORDER BY ( modifieddate desc);
+CREATE TABLE som_dev.message (messageid bigint,sendid text,instanceid text,customerid bigint,customername text,userid bigint,active boolean,username text,groupid bigint,groupname text,configurationid bigint,configurationname text,type text, source text, emailid text, mobilenumber text,templateid bigint,subject text,message text,messagestatus text, createdby bigint,createdbyname text,createddate timestamp,modifiedby bigint,modifiedbyname text,modifieddate timestamp,status boolean,comments text,PRIMARY KEY (messageid));
 ------------------------------------------------------------------------------------------------------
 
 
